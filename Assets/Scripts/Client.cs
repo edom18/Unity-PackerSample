@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using SimpleTexturePacker.Domain;
+using SimpleTexturePacker.Application;
+using SimpleTexturePacker.Infrastructure;
+
 public class Client : MonoBehaviour
 {
     public class DummyPackImage : IPackImage
@@ -19,7 +23,11 @@ public class Client : MonoBehaviour
         }
     }
 
-    private Packer _packer = null;
+    [SerializeField]
+    private Material _material = null;
+
+    private PackService _packerService = null;
+    private IPacker _packer = null;
 
     private void Start()
     {
@@ -32,7 +40,9 @@ public class Client : MonoBehaviour
             new DummyPackImage(150, 30),
         };
 
-        _packer = new Packer(1024);
-        _packer.SetImages(imgs);
+        int size = 1024;
+        _packer = new Packer(size, _material);
+        _packerService = new PackService(1024, _packer);
+        _packerService.SetImages(imgs);
     }
 }
