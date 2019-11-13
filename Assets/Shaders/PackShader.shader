@@ -40,7 +40,7 @@
             sampler2D _MainTex;
             sampler2D _PackTex;
             float _Scale;
-            float2 _Offset;
+            float4 _Offset;
 
             fixed4 frag (v2f i) : SV_Target
             {
@@ -51,7 +51,6 @@
 
                 if (puv.x < 0.0 || puv.x > 1.0)
                 {
-                    return float4(1, 0, 0, 1);
                     return col;
                 }
 

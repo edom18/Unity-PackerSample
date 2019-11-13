@@ -9,12 +9,13 @@ namespace SimpleTexturePacker.Domain
     {
         int Width { get; }
         int Height { get; }
+        Texture Texture { get; }
     }
 
     public interface IPacker
     {
         void Pack(IPackImage image, Rect rect);
-        Texture2D GetPackedTexture();
+        Texture GetPackedImage();
     }
 
     public class Node

@@ -26,7 +26,14 @@ namespace SimpleTexturePacker.Application
             {
                 Node node = _rootNode.Insert(img);
                 node.SetImage(count++);
+
+                _packer.Pack(img, node.Rectangle);
             }
+        }
+
+        public Texture GetPackedImage()
+        {
+            return _packer.GetPackedImage();
         }
     }
 }
