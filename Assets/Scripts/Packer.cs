@@ -45,21 +45,17 @@ namespace SimpleTexturePacker.Infrastructure
 
         void IPacker.Pack(IPackImage image, Rect rect)
         {
-            _material.SetTexture("_PackTex", image.Texture);
-            // Vector4
-            // _material.SetFloat("_Scale", _size / image.Width);
-
             Vector4 scaleAndOffset = new Vector4();
 
             scaleAndOffset.x = _size / image.Width;
             scaleAndOffset.y = _size / image.Height;
 
-            scaleAndOffset.z = rect.x;
-            scaleAndOffset.w = rect.y;
-            scaleAndOffset.z /= _size;
-            scaleAndOffset.w /= _size;
+            scaleAndOffset.z = rect.x / _size;
+            scaleAndOffset.w = rect.y / _size;
 
             _material.SetVector("_ScaleAndOffset", scaleAndOffset);
+            _material.SetTexture("_PackTex", image.Texture);
+
             Graphics.Blit(_current, _next, _material);
 
             SwapBuffer();
