@@ -40,6 +40,7 @@ public class PackClient : MonoBehaviour
 
             Texture2D tex = new Texture2D(_width, _height);
             tex.SetPixels(colors);
+            tex.Apply();
 
             _texture = tex;
         }
