@@ -96,7 +96,7 @@ namespace SimpleTexturePacker.Domain
             }
         }
 
-        public void SetImage(int imageID)
+        public void SetImageID(int imageID)
         {
             ImageID = imageID;
             _isLeafNode = true;

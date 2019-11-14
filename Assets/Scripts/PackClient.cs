@@ -65,7 +65,7 @@ public class PackClient : MonoBehaviour
         int size = 1024;
         _packer = new Packer(size, _material);
         _packerService = new PackService(size, _packer);
-        _packerService.SetImages(imgs);
+        _packerService.PackImages(imgs);
 
         _tex = _packerService.GetPackedImage();
     }

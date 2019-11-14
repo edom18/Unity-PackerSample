@@ -19,13 +19,13 @@ namespace SimpleTexturePacker.Application
             _packer = packer;
         }
 
-        public void SetImages(IPackImage[] images)
+        public void PackImages(IPackImage[] images)
         {
             int count = 0;
             foreach (var img in images)
             {
                 Node node = _rootNode.Insert(img);
-                node.SetImage(count++);
+                node.SetImageID(count++);
 
                 _packer.Pack(img, node.Rectangle);
             }
