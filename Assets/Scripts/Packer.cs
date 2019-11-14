@@ -47,11 +47,11 @@ namespace SimpleTexturePacker.Infrastructure
         {
             Vector4 scaleAndOffset = new Vector4();
 
-            scaleAndOffset.x = _size / image.Width;
-            scaleAndOffset.y = _size / image.Height;
+            scaleAndOffset.x = (float)_size / (float)image.Width;
+            scaleAndOffset.y = (float)_size / (float)image.Height;
 
-            scaleAndOffset.z = rect.x / _size;
-            scaleAndOffset.w = rect.y / _size;
+            scaleAndOffset.z = (float)rect.x / (float)_size;
+            scaleAndOffset.w = (float)rect.y / (float)_size;
 
             _material.SetVector("_ScaleAndOffset", scaleAndOffset);
             _material.SetTexture("_PackTex", image.Texture);
