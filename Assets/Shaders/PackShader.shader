@@ -39,13 +39,13 @@
 
             sampler2D _MainTex;
             sampler2D _PackTex;
-            float _Scale;
-            float4 _Offset;
+            float4 _ScaleAndOffset;
 
             fixed4 frag (v2f i) : SV_Target
             {
-                float2 puv = i.uv - _Offset;
-                puv *= _Scale;
+                float2 puv = i.uv;
+                puv -= _ScaleAndOffset.zw;
+                puv *= _ScaleAndOffset.xy;
 
                 fixed4 col = tex2D(_MainTex, i.uv);
 
