@@ -14,7 +14,8 @@ namespace SimpleTexturePacker.Domain
 
     public interface IPacker
     {
-        void Pack(IPackImage image, Rect rect);
+        void Pack(IPackImage image);
+        void Pack(IPackImage[] images);
         Texture GetPackedImage();
     }
 

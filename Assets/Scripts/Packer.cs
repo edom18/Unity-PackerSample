@@ -15,11 +15,16 @@ namespace SimpleTexturePacker.Infrastructure
 
         private Texture2D _storeTexture = null;
         private Material _material = null;
+        private Node _rootNode = null;
         private int _size = 0;
+        private int _count = 0;
 
         public Packer(int size, Material material)
         {
             _size = size;
+
+            _rootNode = new Node();
+            _rootNode.Rectangle = new Rect(0, 0, size, size);
 
             _storeTexture = new Texture2D(size, size);
             _material = material;
@@ -43,7 +48,40 @@ namespace SimpleTexturePacker.Infrastructure
             return rt;
         }
 
-        void IPacker.Pack(IPackImage image, Rect rect)
+        void IPacker.Pack(IPackImage[] images)
+        {
+            foreach (var img in images)
+            {
+                Node node = _rootNode.Insert(img);
+
+                if (node == null)
+                {
+                    Debug.LogError("Packer texture is full. An image won't be packed.");
+                    return;
+                }
+
+                node.SetImageID(_count++);
+
+                PackImpl(img, node.Rectangle);
+            }
+        }
+
+        void IPacker.Pack(IPackImage image)
+        {
+            Node node = _rootNode.Insert(image);
+
+            if (node == null)
+            {
+                Debug.LogError("Packer texture is full. An image won't be packed.");
+                return;
+            }
+
+            node.SetImageID(_count++);
+
+            PackImpl(image, node.Rectangle);
+        }
+
+        private void PackImpl(IPackImage image, Rect rect)
         {
             Vector4 scaleAndOffset = new Vector4();
 
