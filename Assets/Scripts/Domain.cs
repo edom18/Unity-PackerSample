@@ -79,15 +79,11 @@ namespace SimpleTexturePacker.Domain
 
                 if (dw > dh)
                 {
-                    // child[0]->rect = Rectangle(rc.left, rc.top, rc.left + width - 1, rc.bottom)
-                    // child[1]->rect = Rectangle(rc.left + width, rc.top, rc.right, rc.bottom)
                     Child[0].Rectangle = new Rect(Rectangle.x, Rectangle.y, image.Width, Rectangle.height);
                     Child[1].Rectangle = new Rect(Rectangle.x + image.Width, Rectangle.y, Rectangle.width - image.Width, Rectangle.height);
                 }
                 else
                 {
-                    // child[0]->rect = Rectangle(rc.left, rc.top, rc.right, rc.top + height - 1)
-                    // child[1]->rect = Rectangle(rc.left, rc.top + height, rc.right, rc.bottom)
                     Child[0].Rectangle = new Rect(Rectangle.x, Rectangle.y, Rectangle.width, image.Height);
                     Child[1].Rectangle = new Rect(Rectangle.x, Rectangle.y + image.Height, Rectangle.width, Rectangle.height - image.Height);
                 }
