@@ -52,21 +52,16 @@ namespace SimpleTexturePacker.Infrastructure
         {
             foreach (var img in images)
             {
-                Node node = _rootNode.Insert(img);
-
-                if (node == null)
-                {
-                    Debug.LogError("Packer texture is full. An image won't be packed.");
-                    return;
-                }
-
-                node.SetImageID(_count++);
-
-                PackImpl(img, node.Rectangle);
+                TryPack(img);
             }
         }
 
         void IPacker.Pack(IPackImage image)
+        {
+            TryPack(image);
+        }
+
+        private void TryPack(IPackImage image)
         {
             Node node = _rootNode.Insert(image);
 
@@ -78,10 +73,10 @@ namespace SimpleTexturePacker.Infrastructure
 
             node.SetImageID(_count++);
 
-            PackImpl(image, node.Rectangle);
+            Pack(image, node.Rectangle);
         }
 
-        private void PackImpl(IPackImage image, Rect rect)
+        private void Pack(IPackImage image, Rect rect)
         {
             Vector4 scaleAndOffset = new Vector4();
 
