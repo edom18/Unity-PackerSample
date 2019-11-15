@@ -9,20 +9,28 @@ using SimpleTexturePacker.Infrastructure;
 public class PackClient : MonoBehaviour
 {
     [SerializeField] private Material _material = null;
+    [SerializeField] private Texture[] _textures = null;
 
     private PackService _packerService = null;
     private IPacker _packer = null;
 
     private void Start()
     {
-        IPackImage[] imgs = new IPackImage[]
+        IPackImage[] imgs = new IPackImage[_textures.Length];
+
+        for (int i = 0; i < _textures.Length; i++)
         {
-            new DummyPackImage(50, 130, Color.red),
-            new DummyPackImage(150, 10, Color.green),
-            new DummyPackImage(250, 300, Color.blue),
-            new DummyPackImage(350, 80, Color.yellow),
-            new DummyPackImage(150, 30, Color.cyan),
-        };
+            imgs[i] = new PackImage(_textures[i]);
+        }
+
+        // int min = 10;
+        // int max = 50;
+        // int count = 955;
+        // IPackImage[] imgs = new IPackImage[count];
+        // for (int i = 0; i < imgs.Length; i++)
+        // {
+        //     imgs[i] = new DummyPackImage(Random.Range(min, max), Random.Range(min, max), Random.ColorHSV());
+        // };
 
         int size = 1024;
         _packer = new Packer(size, _material);
