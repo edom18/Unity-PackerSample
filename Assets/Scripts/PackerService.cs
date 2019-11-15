@@ -6,7 +6,7 @@ using SimpleTexturePacker.Domain;
 
 namespace SimpleTexturePacker.Application
 {
-    public class PackService
+    public class PackService : System.IDisposable
     {
         private IPacker _packer = null;
 
@@ -28,6 +28,11 @@ namespace SimpleTexturePacker.Application
         public Texture GetPackedImage()
         {
             return _packer.GetPackedImage();
+        }
+
+        public void Dispose()
+        {
+            _packer.Dispose();
         }
     }
 }

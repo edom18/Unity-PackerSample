@@ -40,6 +40,11 @@ public class PackClient : MonoBehaviour
         _tex = _packerService.GetPackedImage();
     }
 
+    private void OnDestroy()
+    {
+        _packerService.Dispose();
+    }
+
     Texture _tex;
     private void OnGUI()
     {

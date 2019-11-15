@@ -118,5 +118,13 @@ namespace SimpleTexturePacker.Infrastructure
             _current = _next;
             _next = temp;
         }
+
+        void System.IDisposable.Dispose()
+        {
+            _rt1.Release();
+            _rt2.Release();
+            _rt1 = null;
+            _rt2 = null;
+        }
     }
 }

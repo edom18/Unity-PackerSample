@@ -12,7 +12,7 @@ namespace SimpleTexturePacker.Domain
         Texture Texture { get; }
     }
 
-    public interface IPacker
+    public interface IPacker : System.IDisposable
     {
         void Pack(IPackImage image);
         void Pack(IPackImage[] images);
