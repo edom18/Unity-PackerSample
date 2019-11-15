@@ -112,6 +112,12 @@ namespace SimpleTexturePacker.Infrastructure
             return _storeTexture;
         }
 
+        Vector2 IPacker.GetUV(int imageID)
+        {
+            Node target = _rootNode.Find(imageID);
+            return Vector2.zero;
+        }
+
         private void SwapBuffer()
         {
             RenderTexture temp = _current;

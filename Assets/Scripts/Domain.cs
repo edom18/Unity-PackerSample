@@ -17,13 +17,14 @@ namespace SimpleTexturePacker.Domain
         void Pack(IPackImage image);
         void Pack(IPackImage[] images);
         Texture GetPackedImage();
+        Vector2 GetUV(int imageID);
     }
 
     public class Node
     {
         public Node[] Child = new Node[2];
         public Rect Rectangle = default;
-        public int ImageID = -1;
+        private int _imageID = -1;
 
         private bool _isLeafNode = true;
 
@@ -55,7 +56,7 @@ namespace SimpleTexturePacker.Domain
             }
             else
             {
-                if (ImageID != -1)
+                if (_imageID != -1)
                 {
                     return null;
                 }
@@ -95,8 +96,36 @@ namespace SimpleTexturePacker.Domain
 
         public void SetImageID(int imageID)
         {
-            ImageID = imageID;
+            _imageID = imageID;
             _isLeafNode = true;
+        }
+
+        public int GetImageID()
+        {
+            return _imageID;
+        }
+
+        public Node Find(int imageID)
+        {
+            if (imageID == _imageID)
+            {
+                return this;
+            }
+
+            if (_isLeafNode)
+            {
+                return null;
+            }
+
+            Node child = Child[0].Find(imageID);
+            if (child != null)
+            {
+                return child;
+            }
+
+            child = Child[1].Find(imageID);
+
+            return child;
         }
     }
 }
