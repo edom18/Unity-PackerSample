@@ -10,7 +10,7 @@ namespace SimpleTexturePacker.Application
     {
         private IPacker _packer = null;
 
-        public PackService(int size, IPacker packer)
+        public PackService(IPacker packer)
         {
             _packer = packer;
         }

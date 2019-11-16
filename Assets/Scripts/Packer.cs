@@ -19,21 +19,54 @@ namespace SimpleTexturePacker.Infrastructure
         private int _size = 0;
         private int _count = 0;
 
-        public Packer(int size, Material material)
+        public Packer(Material material)
         {
-            _size = size;
+            _material = material;
+        }
+
+        private void Initialize(IPackImage[] images)
+        {
+            _size = CalcSize(images);
 
             _rootNode = new Node();
-            _rootNode.Rectangle = new Rect(0, 0, size, size);
+            _rootNode.Rectangle = new Rect(0, 0, _size, _size);
 
-            _storeTexture = new Texture2D(size, size);
-            _material = material;
+            if (_storeTexture != null) { GameObject.Destroy(_storeTexture); }
+            if (_rt1 != null) { _rt1.Release(); }
+            if (_rt2 != null) { _rt2.Release(); }
 
-            _rt1 = CreateRenderTexture(size, size);
-            _rt2 = CreateRenderTexture(size, size);
+            _storeTexture = new Texture2D(_size, _size);
+
+            _rt1 = CreateRenderTexture(_size, _size);
+            _rt2 = CreateRenderTexture(_size, _size);
 
             _current = _rt1;
             _next = _rt2;
+        }
+
+        private int CalcSize(IPackImage[] images)
+        {
+            float totalArea = 0;
+
+            foreach (var img in images)
+            {
+                totalArea += img.Width * img.Height;
+            }
+
+            for (int i = 1; i <= 13; i++)
+            {
+                int size = 2 << i;
+                int area = size * size;
+
+                if (area >= totalArea)
+                {
+                    return size;
+                }
+            }
+
+            Debug.LogError("Target images have too much area. Please sprite the images.");
+
+            return 0;
         }
 
         private RenderTexture CreateRenderTexture(int width, int height)
@@ -50,6 +83,8 @@ namespace SimpleTexturePacker.Infrastructure
 
         PackedInfo[] IPacker.Pack(IPackImage[] images)
         {
+            Initialize(images);
+
             PackedInfo[] entities = new PackedInfo[images.Length];
 
             for (int i = 0; i < images.Length; i++)
