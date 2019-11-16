@@ -78,13 +78,7 @@ namespace SimpleTexturePacker.Infrastructure
 
         private void Pack(IPackImage image, Rect rect)
         {
-            Vector4 scaleAndOffset = new Vector4();
-
-            scaleAndOffset.x = (float)_size / (float)image.Width;
-            scaleAndOffset.y = (float)_size / (float)image.Height;
-
-            scaleAndOffset.z = (float)rect.x / (float)_size;
-            scaleAndOffset.w = (float)rect.y / (float)_size;
+            Vector4 scaleAndOffset = GetScaleAndOffset(rect);
 
             _material.SetVector("_ScaleAndOffset", scaleAndOffset);
             _material.SetTexture("_PackTex", image.Texture);
@@ -92,6 +86,21 @@ namespace SimpleTexturePacker.Infrastructure
             Graphics.Blit(_current, _next, _material);
 
             SwapBuffer();
+        }
+
+        private Vector4 GetScaleAndOffset(Rect rect)
+        {
+            Vector4 scaleAndOffset = new Vector4();
+
+            float size = (float)_size;
+
+            scaleAndOffset.x = size / rect.width;
+            scaleAndOffset.y = size / rect.height;
+
+            scaleAndOffset.z = rect.x / size;
+            scaleAndOffset.w = rect.y / size;
+
+            return scaleAndOffset;
         }
 
         Texture IPacker.GetPackedImage()
