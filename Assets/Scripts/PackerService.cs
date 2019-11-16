@@ -15,19 +15,14 @@ namespace SimpleTexturePacker.Application
             _packer = packer;
         }
 
-        public Vector4 GetScaleAndOffset(int imageID)
+        public Vector4 GetScaleAndOffset(PackedEntity entity)
         {
-            return _packer.GetScaleAndOffset(imageID);
+            return _packer.GetScaleAndOffset(entity);
         }
 
-        public void PackImages(IPackImage[] images)
+        public PackedEntity[] PackImages(IPackImage[] images)
         {
-            _packer.Pack(images);
-        }
-
-        public void PackImage(IPackImage image)
-        {
-            _packer.Pack(image);
+            return _packer.Pack(images);
         }
 
         public Texture GetPackedImage()

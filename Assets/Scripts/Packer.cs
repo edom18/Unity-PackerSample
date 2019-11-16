@@ -48,32 +48,39 @@ namespace SimpleTexturePacker.Infrastructure
             return rt;
         }
 
-        void IPacker.Pack(IPackImage[] images)
+        PackedEntity[] IPacker.Pack(IPackImage[] images)
         {
-            foreach (var img in images)
+            PackedEntity[] entities = new PackedEntity[images.Length];
+
+            for (int i = 0; i < images.Length; i++)
             {
-                TryPack(img);
+                if (TryPack(images[i], out var entity))
+                {
+                    entities[i] = entity;
+                }
             }
+
+            return entities;
         }
 
-        void IPacker.Pack(IPackImage image)
-        {
-            TryPack(image);
-        }
-
-        private void TryPack(IPackImage image)
+        private bool TryPack(IPackImage image, out PackedEntity entity)
         {
             Node node = _rootNode.Insert(image);
 
             if (node == null)
             {
                 Debug.LogError("Packer texture is full. An image won't be packed.");
-                return;
+                entity = null;
+                return false;
             }
 
-            node.SetImageID(_count++);
+            int imageID = _count++;
+            node.SetImageID(imageID);
 
             Pack(image, node.Rectangle);
+
+            entity = new PackedEntity(imageID, node.Rectangle);
+            return true;
         }
 
         private void Pack(IPackImage image, Rect rect)
@@ -116,9 +123,9 @@ namespace SimpleTexturePacker.Infrastructure
             return _storeTexture;
         }
 
-        Vector4 IPacker.GetScaleAndOffset(int imageID)
+        Vector4 IPacker.GetScaleAndOffset(PackedEntity entity)
         {
-            Node target = _rootNode.Find(imageID);
+            Node target = _rootNode.Find(entity.ImageID);
             return GetScaleAndOffset(target.Rectangle);
         }
 
