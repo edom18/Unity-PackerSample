@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace SimpleTexturePacker.Domain
 {
-    public class PackedEntity
+    public class PackedInfo
     {
         private int _imageID = -1;
         public int ImageID => _imageID;
@@ -13,7 +13,7 @@ namespace SimpleTexturePacker.Domain
         private Rect _rectangle;
         public Rect Rectangle => _rectangle;
 
-        public PackedEntity(int imageID, Rect rectangle)
+        public PackedInfo(int imageID, Rect rectangle)
         {
             _imageID = imageID;
             _rectangle = rectangle;
@@ -29,9 +29,9 @@ namespace SimpleTexturePacker.Domain
 
     public interface IPacker : System.IDisposable
     {
-        PackedEntity[] Pack(IPackImage[] images);
+        PackedInfo[] Pack(IPackImage[] images);
         Texture GetPackedImage();
-        Vector4 GetScaleAndOffset(PackedEntity entity);
+        Vector4 GetScaleAndOffset(PackedInfo info);
     }
 
     public class Node

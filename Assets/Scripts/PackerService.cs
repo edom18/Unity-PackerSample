@@ -15,12 +15,12 @@ namespace SimpleTexturePacker.Application
             _packer = packer;
         }
 
-        public Vector4 GetScaleAndOffset(PackedEntity entity)
+        public Vector4 GetScaleAndOffset(PackedInfo info)
         {
-            return _packer.GetScaleAndOffset(entity);
+            return _packer.GetScaleAndOffset(info);
         }
 
-        public PackedEntity[] PackImages(IPackImage[] images)
+        public PackedInfo[] PackImages(IPackImage[] images)
         {
             return _packer.Pack(images);
         }

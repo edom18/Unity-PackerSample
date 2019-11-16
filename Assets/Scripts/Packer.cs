@@ -48,9 +48,9 @@ namespace SimpleTexturePacker.Infrastructure
             return rt;
         }
 
-        PackedEntity[] IPacker.Pack(IPackImage[] images)
+        PackedInfo[] IPacker.Pack(IPackImage[] images)
         {
-            PackedEntity[] entities = new PackedEntity[images.Length];
+            PackedInfo[] entities = new PackedInfo[images.Length];
 
             for (int i = 0; i < images.Length; i++)
             {
@@ -63,14 +63,14 @@ namespace SimpleTexturePacker.Infrastructure
             return entities;
         }
 
-        private bool TryPack(IPackImage image, out PackedEntity entity)
+        private bool TryPack(IPackImage image, out PackedInfo info)
         {
             Node node = _rootNode.Insert(image);
 
             if (node == null)
             {
                 Debug.LogError("Packer texture is full. An image won't be packed.");
-                entity = null;
+                info = null;
                 return false;
             }
 
@@ -79,7 +79,7 @@ namespace SimpleTexturePacker.Infrastructure
 
             Pack(image, node.Rectangle);
 
-            entity = new PackedEntity(imageID, node.Rectangle);
+            info = new PackedInfo(imageID, node.Rectangle);
             return true;
         }
 
@@ -123,7 +123,7 @@ namespace SimpleTexturePacker.Infrastructure
             return _storeTexture;
         }
 
-        Vector4 IPacker.GetScaleAndOffset(PackedEntity entity)
+        Vector4 IPacker.GetScaleAndOffset(PackedInfo entity)
         {
             Node target = _rootNode.Find(entity.ImageID);
             return GetScaleAndOffset(target.Rectangle);
