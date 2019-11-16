@@ -47,6 +47,8 @@
                 uv /= _ScaleAndOffset.xy;
                 uv += _ScaleAndOffset.zw;
 
+                uv = clamp(uv, 0.0, 1.0);
+
                 fixed4 col = tex2D(_MainTex, uv);
                 return col;
             }
