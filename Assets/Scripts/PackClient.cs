@@ -35,9 +35,8 @@ public class PackClient : MonoBehaviour
         //     imgs[i] = new DummyPackImage(Random.Range(min, max), Random.Range(min, max), Random.ColorHSV());
         // };
 
-        int size = 1024;
-        _packer = new Packer(size, _material);
-        _packerService = new PackService(size, _packer);
+        _packer = new Packer(_material);
+        _packerService = new PackService(_packer);
         PackedInfo[] infos = _packerService.PackImages(imgs);
 
         // Show a packed texture as preview.
