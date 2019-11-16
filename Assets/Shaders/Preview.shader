@@ -44,8 +44,8 @@
             fixed4 frag (v2f i) : SV_Target
             {
                 float2 uv = i.uv;
-                uv += _ScaleAndOffset.zw;
                 uv /= _ScaleAndOffset.xy;
+                uv += _ScaleAndOffset.zw;
 
                 fixed4 col = tex2D(_MainTex, uv);
                 return col;
