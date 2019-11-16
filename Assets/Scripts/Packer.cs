@@ -76,7 +76,7 @@ namespace SimpleTexturePacker.Infrastructure
 
             RenderTexture back = RenderTexture.active;
             RenderTexture.active = rt;
-            GL.Clear(true, true, Color.white);
+            GL.Clear(true, true, Color.clear);
             RenderTexture.active = back;
             return rt;
         }

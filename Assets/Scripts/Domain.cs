@@ -96,12 +96,12 @@ namespace SimpleTexturePacker.Domain
                 if (dw > dh)
                 {
                     Child[0].Rectangle = new Rect(Rectangle.x, Rectangle.y, image.Width, Rectangle.height);
-                    Child[1].Rectangle = new Rect(Rectangle.x + image.Width, Rectangle.y, Rectangle.width - image.Width, Rectangle.height);
+                    Child[1].Rectangle = new Rect(Rectangle.x + image.Width + 1, Rectangle.y, Rectangle.width - image.Width - 1, Rectangle.height);
                 }
                 else
                 {
                     Child[0].Rectangle = new Rect(Rectangle.x, Rectangle.y, Rectangle.width, image.Height);
-                    Child[1].Rectangle = new Rect(Rectangle.x, Rectangle.y + image.Height, Rectangle.width, Rectangle.height - image.Height);
+                    Child[1].Rectangle = new Rect(Rectangle.x, Rectangle.y + image.Height + 1, Rectangle.width, Rectangle.height - image.Height - 1);
                 }
 
                 return Child[0].Insert(image);
