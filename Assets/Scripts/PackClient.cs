@@ -14,6 +14,9 @@ public class PackClient : MonoBehaviour
 
     private PackService _packerService = null;
     private IPacker _packer = null;
+    private int _index = 0;
+    private PackedInfo[] _infos = null;
+    private Material _targetMaterial = null;
 
     private void Start()
     {
@@ -37,21 +40,39 @@ public class PackClient : MonoBehaviour
 
         _packer = new Packer(_material);
         _packerService = new PackService(_packer);
-        PackedInfo[] infos = _packerService.PackImages(imgs);
+        _infos = _packerService.PackImages(imgs);
 
         // Show a packed texture as preview.
         _tex = _packerService.GetPackedImage();
 
-        // Show a texture from packed texture as preview.
-        Material material = _target.GetComponent<Renderer>().material;
-        material.mainTexture = _tex;
-        Vector4 scaleAndOffset = _packerService.GetScaleAndOffset(infos[0]);
-        material.SetVector("_ScaleAndOffset", scaleAndOffset);
+        _targetMaterial = _target.GetComponent<Renderer>().material;
+        _targetMaterial.mainTexture = _tex;
+
+        ShowTex(0);
+    }
+
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            _index = (_index + 1) % _infos.Length;
+            ShowTex(_index);
+        }
     }
 
     private void OnDestroy()
     {
         _packerService.Dispose();
+    }
+
+    private void ShowTex(int index)
+    {
+        // Show a texture from packed texture as preview.
+        Vector4 scaleAndOffset = _packerService.GetScaleAndOffset(_infos[index]);
+        _targetMaterial.SetVector("_ScaleAndOffset", scaleAndOffset);
+
+        float aspect = scaleAndOffset.y / scaleAndOffset.x;
+        _target.transform.localScale = new Vector3(aspect, 1f, 1f);
     }
 
     Texture _tex;
