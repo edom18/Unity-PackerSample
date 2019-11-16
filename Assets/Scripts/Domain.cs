@@ -17,7 +17,7 @@ namespace SimpleTexturePacker.Domain
         void Pack(IPackImage image);
         void Pack(IPackImage[] images);
         Texture GetPackedImage();
-        Vector2 GetUV(int imageID);
+        Vector4 GetScaleAndOffset(int imageID);
     }
 
     public class Node

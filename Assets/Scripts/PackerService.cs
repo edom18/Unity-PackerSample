@@ -15,9 +15,9 @@ namespace SimpleTexturePacker.Application
             _packer = packer;
         }
 
-        public Vector2 GetUV(int imageID)
+        public Vector4 GetScaleAndOffset(int imageID)
         {
-            return _packer.GetUV(imageID);
+            return _packer.GetScaleAndOffset(imageID);
         }
 
         public void PackImages(IPackImage[] images)

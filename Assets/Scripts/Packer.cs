@@ -116,10 +116,10 @@ namespace SimpleTexturePacker.Infrastructure
             return _storeTexture;
         }
 
-        Vector2 IPacker.GetUV(int imageID)
+        Vector4 IPacker.GetScaleAndOffset(int imageID)
         {
             Node target = _rootNode.Find(imageID);
-            return Vector2.zero;
+            return GetScaleAndOffset(target.Rectangle);
         }
 
         private void SwapBuffer()
