@@ -10,6 +10,7 @@ public class PackClient : MonoBehaviour
 {
     [SerializeField] private Material _material = null;
     [SerializeField] private Texture[] _textures = null;
+    [SerializeField] private GameObject _target = null;
 
     private PackService _packerService = null;
     private IPacker _packer = null;
@@ -23,6 +24,8 @@ public class PackClient : MonoBehaviour
             imgs[i] = new PackImage(_textures[i]);
         }
 
+        // Create dummy images.
+        //
         // int min = 10;
         // int max = 50;
         // int count = 955;
@@ -35,9 +38,16 @@ public class PackClient : MonoBehaviour
         int size = 1024;
         _packer = new Packer(size, _material);
         _packerService = new PackService(size, _packer);
-        _packerService.PackImages(imgs);
+        PackedInfo[] infos = _packerService.PackImages(imgs);
 
+        // Show a packed texture as preview.
         _tex = _packerService.GetPackedImage();
+
+        // Show a texture from packed texture as preview.
+        Material material = _target.GetComponent<Renderer>().material;
+        material.mainTexture = _tex;
+        Vector4 scaleAndOffset = _packerService.GetScaleAndOffset(infos[0]);
+        material.SetVector("_ScaleAndOffset", scaleAndOffset);
     }
 
     private void OnDestroy()
