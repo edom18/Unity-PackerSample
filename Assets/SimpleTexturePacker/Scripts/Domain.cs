@@ -8,10 +8,10 @@ namespace SimpleTexturePacker.Domain
     public class PackedInfo
     {
         private int _imageID = -1;
-        public int ImageID => _imageID;
+        public int ImageID { get { return _imageID; } }
 
         private Rect _rectangle;
-        public Rect Rectangle => _rectangle;
+        public Rect Rectangle { get { return _rectangle; } }
 
         public PackedInfo(int imageID, Rect rectangle)
         {
@@ -37,7 +37,7 @@ namespace SimpleTexturePacker.Domain
     public class Node
     {
         public Node[] Child = new Node[2];
-        public Rect Rectangle = default;
+        public Rect Rectangle;
         private int _imageID = -1;
 
         private bool _isLeafNode = true;

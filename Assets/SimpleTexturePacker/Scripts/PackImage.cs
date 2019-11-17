@@ -10,9 +10,9 @@ namespace SimpleTexturePacker.Infrastructure
     {
         private Texture _texture = null;
 
-        int IPackImage.Width => _texture.width;
-        int IPackImage.Height => _texture.height;
-        Texture IPackImage.Texture => _texture;
+        int IPackImage.Width { get { return _texture.width; } }
+        int IPackImage.Height { get { return _texture.height; } }
+        Texture IPackImage.Texture { get { return _texture; } }
 
         public PackImage(Texture texture)
         {
