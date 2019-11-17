@@ -8,6 +8,8 @@ namespace SimpleTexturePacker.Infrastructure
 {
     public class Packer : IPacker
     {
+        private readonly int LIMIT_EXP = 12;
+
         private RenderTexture _rt1 = null;
         private RenderTexture _rt2 = null;
         private RenderTexture _current = null;
@@ -17,20 +19,24 @@ namespace SimpleTexturePacker.Infrastructure
         private Material _material = null;
         private Node _rootNode = null;
         private int _size = 0;
+        private int _exp = 8;
         private int _count = 0;
 
         public Packer(Material material)
         {
             _material = material;
+
+            _size = 2 << _exp;
         }
 
-        private void Initialize(IPackImage[] images)
+        private void GenerateNode()
         {
-            _size = CalcSize(images);
-
             _rootNode = new Node();
             _rootNode.Rectangle = new Rect(0, 0, _size, _size);
+        }
 
+        private void GenerateBuffers()
+        {
             if (_storeTexture != null) { GameObject.Destroy(_storeTexture); }
             if (_rt1 != null) { _rt1.Release(); }
             if (_rt2 != null) { _rt2.Release(); }
@@ -42,31 +48,6 @@ namespace SimpleTexturePacker.Infrastructure
 
             _current = _rt1;
             _next = _rt2;
-        }
-
-        private int CalcSize(IPackImage[] images)
-        {
-            float totalArea = 0;
-
-            foreach (var img in images)
-            {
-                totalArea += img.Width * img.Height;
-            }
-
-            for (int i = 1; i <= 13; i++)
-            {
-                int size = 2 << i;
-                int area = size * size;
-
-                if (area >= totalArea)
-                {
-                    return size;
-                }
-            }
-
-            Debug.LogError("Target images have too much area. Please sprite the images.");
-
-            return 0;
         }
 
         private RenderTexture CreateRenderTexture(int width, int height)
@@ -81,21 +62,65 @@ namespace SimpleTexturePacker.Infrastructure
             return rt;
         }
 
-        PackedInfo[] IPacker.Pack(IPackImage[] images)
+        private bool TryGrowthSize()
         {
-            Initialize(images);
+            _exp++;
 
-            PackedInfo[] entities = new PackedInfo[images.Length];
+            if (_exp > LIMIT_EXP)
+            {
+                Debug.LogError("The size is over the limit. Limit size is 8192.");
+                return false;
+            }
+
+            _size = 2 << _exp;
+
+            return true;
+        }
+
+        private bool TryGetInfos(IPackImage[] images, out PackedInfo[] infos)
+        {
+            GenerateNode();
+
+            infos = new PackedInfo[images.Length];
 
             for (int i = 0; i < images.Length; i++)
             {
-                if (TryPack(images[i], out var entity))
+                PackedInfo info;
+                if (TryPack(images[i], out info))
                 {
-                    entities[i] = entity;
+                    infos[i] = info;
+                }
+                else
+                {
+                    if (!TryGrowthSize())
+                    {
+                        return false;
+                    }
+
+                    TryGetInfos(images, out infos);
                 }
             }
 
-            return entities;
+            return true;
+        }
+
+        PackedInfo[] IPacker.Pack(IPackImage[] images)
+        {
+            PackedInfo[] infos;
+            if (!TryGetInfos(images, out infos))
+            {
+                Debug.LogError("Packing is failed. Please check the images if it has too much images.");
+                return null;
+            }
+
+            GenerateBuffers();
+
+            for (int i = 0; i < infos.Length; i++)
+            {
+                Pack(images[i], infos[i].Rectangle);
+            }
+
+            return infos;
         }
 
         private bool TryPack(IPackImage image, out PackedInfo info)
@@ -104,15 +129,12 @@ namespace SimpleTexturePacker.Infrastructure
 
             if (node == null)
             {
-                Debug.LogError("Packer texture is full. An image won't be packed.");
                 info = null;
                 return false;
             }
 
             int imageID = _count++;
             node.SetImageID(imageID);
-
-            Pack(image, node.Rectangle);
 
             info = new PackedInfo(imageID, node.Rectangle);
             return true;
